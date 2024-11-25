@@ -5,6 +5,7 @@
 
 #include "tools/SynchronBlockProcessor.h"
 #include "PluginSettings.h"
+#include "FormantFilterAlgo.h"
 
 class FormantFilterAudioProcessor;
 
@@ -25,7 +26,7 @@ class FormantFilterAudio : public SynchronBlockProcessor
 public:
     FormantFilterAudio(FormantFilterAudioProcessor* processor);
     void prepareToPlay(double sampleRate, int max_samplesPerBlock, int max_channels);
-    virtual int processSynchronBlock(juce::AudioBuffer<float>&, juce::MidiBuffer& midiMessages, int NrOfBlocksSinceLastProcessBlock);
+ 	virtual int processSynchronBlock(juce::AudioBuffer<float>&, juce::MidiBuffer& midiMessages, int NrOfBlocksSinceLastProcessBlock);    
 
     // parameter handling
   	void addParameter(std::vector < std::unique_ptr<juce::RangedAudioParameter>>& paramVector);
@@ -37,6 +38,9 @@ public:
 private:
 	FormantFilterAudioProcessor* m_processor;
     int m_Latency = 0;
+
+	FormantFilter m_filter;
+
 };
 
 class FormantFilterGUI : public juce::Component
@@ -49,5 +53,7 @@ public:
 private:
 	FormantFilterAudioProcessor& m_processor;
     juce::AudioProcessorValueTreeState& m_apvts; 
+
+
 
 };

@@ -3,7 +3,7 @@
 #include <juce_audio_processors/juce_audio_processors.h>
 #include "tools/MidiModPitchState.h"
 #include "tools/PresetHandler.h"
-#include "FormantFilter.h"
+#include "FormantFilterAudioHandler.h"
 
 //==============================================================================
 class FormantFilterAudioProcessor  : public juce::AudioProcessor

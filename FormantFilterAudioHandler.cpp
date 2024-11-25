@@ -1,5 +1,5 @@
 #include <math.h>
-#include "FormantFilter.h"
+#include "FormantFilterAudioHandler.h"
 
 #include "PluginProcessor.h"
 
@@ -21,12 +21,17 @@ void FormantFilterAudio::prepareToPlay(double sampleRate, int max_samplesPerBloc
     prepareSynchronProcessing(max_channels,synchronblocksize);
     m_Latency += synchronblocksize;
     // here your code
+    m_filter.setSamplerate(sampleRate);
+    m_filter.setNrOfChns(max_channels);
+    m_filter.setnrofFormants(2);
+    m_filter.setFormantbyVocal("a");
 
 }
 
 int FormantFilterAudio::processSynchronBlock(juce::AudioBuffer<float> & buffer, juce::MidiBuffer &midiMessages, int NrOfBlocksSinceLastProcessBlock)
 {
-    juce::ignoreUnused(buffer, midiMessages, NrOfBlocksSinceLastProcessBlock);
+    juce::ignoreUnused(midiMessages, NrOfBlocksSinceLastProcessBlock);
+    m_filter.processSamples(buffer);
     return 0;
 }
 
@@ -63,10 +68,10 @@ void FormantFilterGUI::paint(juce::Graphics &g)
     g.fillAll (getLookAndFeel().findColour (juce::ResizableWindow::backgroundColourId).brighter(0.3f));
 
     g.setColour (juce::Colours::white);
-    g.setFont (15.0f);
+    g.setFont (12.0f);
     
     juce::String text2display = "FormantFilter V " + juce::String(PLUGIN_VERSION_MAJOR) + "." + juce::String(PLUGIN_VERSION_MINOR) + "." + juce::String(PLUGIN_VERSION_PATCH);
-    g.drawFittedText (text2display, getLocalBounds(), juce::Justification::centred, 1);
+    g.drawFittedText (text2display, getLocalBounds(), juce::Justification::bottomLeft, 1);
 
 }
 

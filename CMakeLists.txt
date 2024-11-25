@@ -65,7 +65,8 @@ target_sources(${TARGET_NAME}
     PRIVATE
         PluginEditor.cpp
         PluginProcessor.cpp
-        FormantFilter.cpp
+        FormantFilterAudioHandler.cpp
+        FormantFilterAlgo.cpp
         tools/MidiModPitchState.cpp
         tools/PresetHandler.cpp
         tools/SynchronBlockProcessor.cpp

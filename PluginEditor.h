@@ -6,7 +6,7 @@
 #include "tools/MidiModPitchState.h"
 
 
-#include "FormantFilter.h"
+#include "FormantFilterAudioHandler.h"
 
 //==============================================================================
 class FormantFilterAudioProcessorEditor  : public juce::AudioProcessorEditor
