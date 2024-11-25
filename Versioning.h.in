@@ -1,0 +1,5 @@
+#pragma once
+// Macros for CMAKE
+#define PLUGIN_VERSION_MAJOR @FormantFilter_VERSION_MAJOR@
+#define PLUGIN_VERSION_MINOR @FormantFilter_VERSION_MINOR@
+#define PLUGIN_VERSION_PATCH @FormantFilter_VERSION_PATCH@
