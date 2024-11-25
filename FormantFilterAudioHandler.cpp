@@ -31,6 +31,29 @@ void FormantFilterAudio::prepareToPlay(double sampleRate, int max_samplesPerBloc
 int FormantFilterAudio::processSynchronBlock(juce::AudioBuffer<float> & buffer, juce::MidiBuffer &midiMessages, int NrOfBlocksSinceLastProcessBlock)
 {
     juce::ignoreUnused(midiMessages, NrOfBlocksSinceLastProcessBlock);
+
+    bool somethingchanged = false;
+    somethingchanged = m_paramF1Frequency.updateWithNotification(m_F1Frequency);
+    if (somethingchanged)
+    {
+        m_filter.setFrequency(0,m_F1Frequency);
+    }
+    somethingchanged = m_paramF2Frequency.updateWithNotification(m_F2Frequency);
+    if (somethingchanged)
+    {
+        m_filter.setFrequency(1,m_F2Frequency);
+    }
+    somethingchanged = m_paramF1Radius.updateWithNotification(m_F1Radius);
+    if (somethingchanged)
+    {
+        m_filter.setRadius(0,m_F1Radius);
+    }
+    somethingchanged = m_paramF2Radius.updateWithNotification(m_F2Radius);
+    if (somethingchanged)
+    {
+        m_filter.setRadius(1,m_F2Radius);
+    }
+
     m_filter.processSamples(buffer);
     return 0;
 }
@@ -38,14 +61,47 @@ int FormantFilterAudio::processSynchronBlock(juce::AudioBuffer<float> & buffer, 
 void FormantFilterAudio::addParameter(std::vector<std::unique_ptr<juce::RangedAudioParameter>> &paramVector)
 {
     // this is just a placeholder (necessary for compiling/testing the template)
-    paramVector.push_back(std::make_unique<AudioParameterFloat>(g_paramExample.ID,
-        g_paramExample.name,
-        NormalisableRange<float>(g_paramExample.minValue, g_paramExample.maxValue),
-        g_paramExample.defaultValue,
-        AudioParameterFloatAttributes().withLabel (g_paramExample.unitName)
+    paramVector.push_back(std::make_unique<AudioParameterFloat>(g_paramF1Frequency.ID,
+        g_paramF1Frequency.name,
+        NormalisableRange<float>(g_paramF1Frequency.minValue, g_paramF1Frequency.maxValue),
+        g_paramF1Frequency.defaultValue,
+        AudioParameterFloatAttributes().withLabel (g_paramF1Frequency.unitName)
                                         .withCategory (juce::AudioProcessorParameter::genericParameter)
                                         // or two additional lines with lambdas to convert data for display
-                                        // .withStringFromValueFunction (std::move ([](float value, int MaxLen) { value = int(exp(value) * 10) * 0.1f;  return (String(value, MaxLen) + " Hz"); }))
+                                        .withStringFromValueFunction (std::move ([](float value, int MaxLen) { value = int((value) * 10 + 0.5f) * 0.1f;  return (String(value, MaxLen)); }))
+                                        // .withValueFromStringFunction (std::move ([](const String& text) {return text.getFloatValue(); }))
+                        ));
+
+    paramVector.push_back(std::make_unique<AudioParameterFloat>(g_paramF2Frequency.ID,
+        g_paramF2Frequency.name,
+        NormalisableRange<float>(g_paramF2Frequency.minValue, g_paramF2Frequency.maxValue),
+        g_paramF2Frequency.defaultValue,
+        AudioParameterFloatAttributes().withLabel (g_paramF2Frequency.unitName)
+                                        .withCategory (juce::AudioProcessorParameter::genericParameter)
+                                        // or two additional lines with lambdas to convert data for display
+                                        .withStringFromValueFunction (std::move ([](float value, int MaxLen) { value = int((value) * 10 + 0.5f) * 0.1f;  return (String(value, MaxLen)); }))
+                                        // .withValueFromStringFunction (std::move ([](const String& text) {return text.getFloatValue(); }))
+                        ));
+
+    paramVector.push_back(std::make_unique<AudioParameterFloat>(g_paramF1Radius.ID,
+        g_paramF1Radius.name,
+        NormalisableRange<float>(g_paramF1Radius.minValue, g_paramF1Radius.maxValue),
+        g_paramF1Radius.defaultValue,
+        AudioParameterFloatAttributes().withLabel (g_paramF1Radius.unitName)
+                                        .withCategory (juce::AudioProcessorParameter::genericParameter)
+                                        // or two additional lines with lambdas to convert data for display
+                                        .withStringFromValueFunction (std::move ([](float value, int MaxLen) { value = int((value) * 10 + 0.5f) * 0.1f;  return (String(value, MaxLen)); }))
+                                        // .withValueFromStringFunction (std::move ([](const String& text) {return text.getFloatValue(); }))
+                        ));
+
+    paramVector.push_back(std::make_unique<AudioParameterFloat>(g_paramF2Radius.ID,
+        g_paramF2Radius.name,
+        NormalisableRange<float>(g_paramF2Radius.minValue, g_paramF2Radius.maxValue),
+        g_paramF2Radius.defaultValue,
+        AudioParameterFloatAttributes().withLabel (g_paramF2Radius.unitName)
+                                        .withCategory (juce::AudioProcessorParameter::genericParameter)
+                                        // or two additional lines with lambdas to convert data for display
+                                        .withStringFromValueFunction (std::move ([](float value, int MaxLen) { value = int((value) * 10 + 0.5f) * 0.1f;  return (String(value, MaxLen)); }))
                                         // .withValueFromStringFunction (std::move ([](const String& text) {return text.getFloatValue(); }))
                         ));
 
@@ -53,7 +109,10 @@ void FormantFilterAudio::addParameter(std::vector<std::unique_ptr<juce::RangedAu
 
 void FormantFilterAudio::prepareParameter(std::unique_ptr<juce::AudioProcessorValueTreeState> &vts)
 {
-    juce::ignoreUnused(vts);
+    m_paramF1Frequency.prepareParameter(vts->getRawParameterValue(g_paramF1Frequency.ID));
+    m_paramF2Frequency.prepareParameter(vts->getRawParameterValue(g_paramF2Frequency.ID));
+    m_paramF1Radius.prepareParameter(vts->getRawParameterValue(g_paramF1Radius.ID));
+    m_paramF2Radius.prepareParameter(vts->getRawParameterValue(g_paramF2Radius.ID));
 }
 
 

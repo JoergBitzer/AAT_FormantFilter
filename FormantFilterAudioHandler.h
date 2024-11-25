@@ -4,6 +4,7 @@
 #include <juce_audio_processors/juce_audio_processors.h>
 
 #include "tools/SynchronBlockProcessor.h"
+#include "tools/AudioProcessParameter.h"
 #include "PluginSettings.h"
 #include "FormantFilterAlgo.h"
 
@@ -12,13 +13,43 @@ class FormantFilterAudioProcessor;
 // This is how we define our parameter as globals to use it in the audio processor as well as in the editor
 const struct
 {
-	const std::string ID = "ExampleID";
-	const std::string name = "Example";
-	const std::string unitName = "xyz";
-	const float minValue = 1.f;
-	const float maxValue = 2.f;
-	const float defaultValue = 1.2f;
-}g_paramExample;
+	const std::string ID = "F1FrequencyID";
+	const std::string name = "F1Frequency";
+	const std::string unitName = " Hz";
+	const float minValue = 200.f;
+	const float maxValue = 950.f;
+	const float defaultValue = 600.f;
+}g_paramF1Frequency;
+
+const struct
+{
+	const std::string ID = "F2FrequencyID";
+	const std::string name = "F2Frequency";
+	const std::string unitName = " Hz";
+	const float minValue = 600.f;
+	const float maxValue = 3000.f;
+	const float defaultValue = 1600.f;
+}g_paramF2Frequency;
+
+const struct
+{
+	const std::string ID = "F1RadiusID";
+	const std::string name = "F1Radius";
+	const std::string unitName = "";
+	const float minValue = 0.f;
+	const float maxValue = 0.99f;
+	const float defaultValue = 0.7f;
+}g_paramF1Radius;
+
+const struct
+{
+	const std::string ID = "F2RadiusID";
+	const std::string name = "F2Radius";
+	const std::string unitName = "";
+	const float minValue = 0.f;
+	const float maxValue = 0.99f;
+	const float defaultValue = 0.7f;
+}g_paramF2Radius;
 
 
 class FormantFilterAudio : public SynchronBlockProcessor
@@ -40,6 +71,15 @@ private:
     int m_Latency = 0;
 
 	FormantFilter m_filter;
+
+	jade::AudioProcessParameter<float> m_paramF1Frequency;
+	float m_F1Frequency = g_paramF1Frequency.defaultValue;
+	jade::AudioProcessParameter<float> m_paramF2Frequency;
+	float m_F2Frequency = g_paramF2Frequency.defaultValue;
+	jade::AudioProcessParameter<float> m_paramF1Radius;
+	float m_F1Radius = g_paramF1Radius.defaultValue;
+	jade::AudioProcessParameter<float> m_paramF2Radius;
+	float m_F2Radius = g_paramF2Radius.defaultValue;
 
 };
 

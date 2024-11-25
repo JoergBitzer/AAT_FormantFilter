@@ -1,5 +1,8 @@
 #include "FormantFilterAlgo.h"
+// This is interesting
+// https://dsp.stackexchange.com/questions/26812/estimating-pole-radius-of-formant-filter-from-bandwidth
 
+// https://pmc.ncbi.nlm.nih.gov/articles/PMC6002811/
 FormantFilter::FormantFilter(float fs, int nrofchns, int nrofformants)
 :m_fs(fs),m_nrOfChns(nrofchns),m_nrOfFormants(nrofformants)
 {
@@ -78,18 +81,42 @@ void FormantFilter::setFormantbyVocal(juce::String vocal)
     // https://www.static.tu.berlin/fileadmin/www/10002019/Forschung/Formantkarten_des_deutschen_Vokalsystems_01.pdf
     if (vocal == "a")
     {
-        setFrequency(0,800.f);
-        setRadius(0,0.98);
-        setFrequency(1,1400.f);
-        setRadius(1,0.98);
+        setFrequency(0,730.f);
+        setRadius(0,0.705);
+        setFrequency(1,1090.f);
+        setRadius(1,0.629);
+        
     }
     if (vocal == "e")
     {
-        setFrequency(0,350.f);
-        setRadius(0,0.98);
-        setFrequency(1,2200.f);
-        setRadius(1,0.98);
+        setFrequency(0,660.f);
+        setRadius(0,0.79);
+        setFrequency(1,2400.f);
+        setRadius(1,0.70);
     }
+
+    if (vocal == "i")
+    {
+        setFrequency(0,400.f);
+        setRadius(0,0.87);
+        setFrequency(1,3000.f);
+        setRadius(1,0.790);
+    }
+    if (vocal == "o")
+    {
+        setFrequency(0,500.f);
+        setRadius(0,0.79);
+        setFrequency(1,800.f);
+        setRadius(1,0.70);
+    }
+    if (vocal == "u")
+    {
+        setFrequency(0,300.f);
+        setRadius(0,0.842);
+        setFrequency(1,1000.f);
+        setRadius(1,0.79);
+    }
+
 
     computeCoeffs();
 }
@@ -103,6 +130,7 @@ void FormantFilter::computeCoeffs()
         for (size_t cc = 0; cc < m_nrOfChns; cc++ )
         {
             m_filter[cc][ff].setCoeffs(a1,a2);
+            m_filter[cc][ff].setGainCompensation(1.f- sqrtf(m_radius[ff]));
         }
     }
 }
