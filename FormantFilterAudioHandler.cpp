@@ -117,9 +117,11 @@ void FormantFilterAudio::prepareParameter(std::unique_ptr<juce::AudioProcessorVa
 
 
 FormantFilterGUI::FormantFilterGUI(FormantFilterAudioProcessor& p, juce::AudioProcessorValueTreeState& apvts)
-:m_processor(p) ,m_apvts(apvts)
+:m_processor(p) ,m_apvts(apvts), m_XYComponent(apvts.getParameter("F1FrequencyID"),apvts.getParameter("F2FrequencyID"))
 {
-    
+
+
+    addAndMakeVisible(m_XYComponent);
 }
 
 void FormantFilterGUI::paint(juce::Graphics &g)
@@ -137,11 +139,18 @@ void FormantFilterGUI::paint(juce::Graphics &g)
 void FormantFilterGUI::resized()
 {
 	auto r = getLocalBounds();
-    
+
     // if you have to place several components, use scaleFactor
     //int width = r.getWidth();
 	//float scaleFactor = float(width)/g_minGuiSize_x;
 
     // use the given canvas in r
-    juce::ignoreUnused(r);
+    r.reduce(15,15);
+    auto s = r;
+    r.removeFromRight(getWidth()/2);
+    m_XYComponent.setBounds(r);
+
+    s.removeFromLeft(getWidth()/2);
+    
+
 }

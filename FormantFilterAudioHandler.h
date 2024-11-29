@@ -7,6 +7,7 @@
 #include "tools/AudioProcessParameter.h"
 #include "PluginSettings.h"
 #include "FormantFilterAlgo.h"
+#include "XYComponent.h"
 
 class FormantFilterAudioProcessor;
 
@@ -94,6 +95,6 @@ private:
 	FormantFilterAudioProcessor& m_processor;
     juce::AudioProcessorValueTreeState& m_apvts; 
 
-
+	XYComponent m_XYComponent;
 
 };
